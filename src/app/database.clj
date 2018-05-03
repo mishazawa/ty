@@ -1,13 +1,35 @@
 (ns app.database)
 
-(require '[monger.core :as mg]
-         '[monger.json]
+(require '[clojure.java.jdbc :as j]
          '[environ.core :refer [env]])
 
-(def ^:const mongo-url (str "mongodb://" (env :client) ":" (env :pass) "@" (env :database-url)))
+(def ^:private db-spec
+  {:classname   "org.sqlite.JDBC"
+   :subprotocol "sqlite"
+   :subname     (env :database)})
 
-(def connection (mg/connect-via-uri mongo-url))
+(defn create-db []
+  (try (j/db-do-commands db-spec
+          (j/create-table-ddl :music
+            [[:album :text]
+             [:url :text]
+             [:talb :text]
+             [:trck :text]
+             [:tit2 :text]
+             [:tyer :text]
+             [:genre :text]
+             [:title :text]
+             [:type :text]
+             [:version :text]
+             [:artist :text]
+             [:guid :text]]))
+       (catch Exception e (println e))))
 
-(defn db-query [f coll]
-  (let [db (:db connection)]
-    (f db coll)))
+(defn db-query [que]
+  (j/query db-spec que))
+
+(defn db-insert! [data]
+  (j/insert! db-spec :music data))
+
+(defn db-update! [id data]
+  (j/update! db-spec :music data ["guid = ?" id]))
