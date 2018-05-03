@@ -5,8 +5,8 @@
          '[ring.middleware.params :refer [wrap-params]]
          '[ring.middleware.json :refer [wrap-json-response wrap-json-body]]
          '[ring.util.response :refer [response]]
-
-         '[app.music :as music])
+         '[app.music :as music]
+         '[app.database :refer [create-db]])
 
 (defn wrap-handler [f]
   (-> f wrap-params wrap-json-body wrap-json-response))
@@ -34,6 +34,8 @@
 
 (defn sign-url [request]
   (response (music/sign-s3 (to-keyw (:body request)))))
+
+(create-db)
 
 (defroutes handler
   (context "/music" []

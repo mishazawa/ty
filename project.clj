@@ -12,7 +12,8 @@
                  [compojure "1.6.1"]
                  [cheshire "5.3.1" :exclusions [com.fasterxml.jackson.core/jackson-core]]
 
-                 [com.novemberain/monger "3.1.0"]
+                 [org.clojure/java.jdbc "0.7.6"]
+                 [org.xerial/sqlite-jdbc "3.7.2"]
                  [amazonica "0.3.121"]
 
                  [ring/ring-devel "1.6.3"]]
