@@ -17,6 +17,7 @@
              [:trck :text]
              [:tit2 :text]
              [:tyer :text]
+             [:tlen :text]
              [:genre :text]
              [:title :text]
              [:type :text]
