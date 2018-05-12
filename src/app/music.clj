@@ -3,7 +3,7 @@
 (require '[app.database :as db]
          '[app.processing :as processing]
          '[clojure.java.jdbc :as sql]
-
+         '[clojure.core.async :as async]
          '[amazonica.core :refer [with-credential defcredential]]
          '[amazonica.aws.s3 :as s3]
 
@@ -20,20 +20,22 @@
 (defn music-item-blank [data]
   (conj data { :guid (str (java.util.UUID/randomUUID)) }))
 
-(defn create-music-item [data]
-  (let [item (music-item-blank (get data :body))]
-    (-> 'item
-      db/db-insert!
-      (#(process-music-item (% :guid)))) item))
-
 (defn update-music-item [id data]
-  ((db/db-update! id data) {:id id}))
+  (db/db-update! id data)
+  {:id id})
 
 (defn process-music-item [id]
   (-> id
     get-music-info
     (#(processing/get-and-process ((first %) :url)))
     (#(update-music-item id {:processed_url (str "https://" (env :bucket-name) ".s3.amazonaws.com/" (% :slug))}))))
+
+(defn create-music-item [data]
+  (let [item (music-item-blank (get data :body))]
+    (async/go (db/db-insert! item) (process-music-item (item :guid)))
+    item))
+
+
 
 (defn sign-s3 [body]
   (let [file-name (:file-name body) file-type (:file-type body)]
