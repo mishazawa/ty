@@ -21,10 +21,13 @@
   (conj data { :guid (str (java.util.UUID/randomUUID)) }))
 
 (defn create-music-item [data]
-  (db/db-insert! (music-item-blank (get data :body))))
+  (let [item (music-item-blank (get data :body))]
+    (-> 'item
+      db/db-insert!
+      (#(process-music-item (% :guid)))) item))
 
 (defn update-music-item [id data]
-  (db/db-update! id data))
+  ((db/db-update! id data) {:id id}))
 
 (defn process-music-item [id]
   (-> id
