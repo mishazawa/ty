@@ -1,6 +1,7 @@
 (ns app.music)
 
 (require '[app.database :as db]
+         '[app.processing :as processing]
          '[clojure.java.jdbc :as sql]
 
          '[amazonica.core :refer [with-credential defcredential]]
@@ -25,6 +26,11 @@
 (defn update-music-item [id data]
   (db/db-update! id data))
 
+(defn process-music-item [id]
+  (-> id
+    get-music-info
+    (#(processing/get-and-process ((first %) :url)))
+    (#(update-music-item id {:processed_url (str "https://" (env :bucket-name) ".s3.amazonaws.com/" (% :slug))}))))
 
 (defn sign-s3 [body]
   (let [file-name (:file-name body) file-type (:file-type body)]

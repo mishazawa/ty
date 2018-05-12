@@ -27,6 +27,10 @@
   (let [data (music/update-music-item (:id (:params request)) (:body request))]
   (response { :data data })))
 
+(defn process-music-item [request]
+  (let [data (music/process-music-item (:id (:params request)))]
+    (response { :data data })))
+
 ;; rwr to middleware
 
 (defn to-keyw [m]
@@ -39,10 +43,11 @@
 
 (defroutes handler
   (context "/music" []
-      (GET  "/"     [] (wrap-handler get-list))
-      (POST "/sign" [request] #((wrap-handler sign-url) %))
-      (POST "/"     [request] #((wrap-handler create-item) %))
-      (PUT  "/:id"  [request] #((wrap-handler update-item) %))
-      (GET  "/:id"  [request] #((wrap-handler get-info) (:params %))))
+      (GET  "/"      [] (wrap-handler get-list))
+      (POST "/sign"  [request] #((wrap-handler sign-url) %))
+      (POST "/p/:id" [request] #((wrap-handler process-music-item) %))
+      (POST "/"      [request] #((wrap-handler create-item) %))
+      (PUT  "/:id"   [request] #((wrap-handler update-item) %))
+      (GET  "/:id"   [request] #((wrap-handler get-info) (:params %))))
   (route/not-found "Nothing is real"))
 

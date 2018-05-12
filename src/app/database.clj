@@ -13,6 +13,7 @@
           (j/create-table-ddl :music
             [[:album :text]
              [:url :text]
+             [:processed_url :text]
              [:talb :text]
              [:trck :text]
              [:tit2 :text]

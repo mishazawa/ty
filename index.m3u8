@@ -1,0 +1,9 @@
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:11
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:10.007800,
+https://s3.us-east-2.amazonaws.com/kletka/p/02-mp3/song-00000.ts
+#EXTINF:4.318911,
+https://s3.us-east-2.amazonaws.com/kletka/p/02-mp3/song-00001.ts
+#EXT-X-ENDLIST

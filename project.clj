@@ -11,7 +11,7 @@
                  [environ "1.1.0"]
                  [compojure "1.6.1"]
                  [cheshire "5.3.1" :exclusions [com.fasterxml.jackson.core/jackson-core]]
-
+                 [slugify "0.0.1"]
                  [org.clojure/java.jdbc "0.7.6"]
                  [org.xerial/sqlite-jdbc "3.7.2"]
                  [amazonica "0.3.121"]
